@@ -1,7 +1,12 @@
 # Post it now — LinkedIn + X, step by step
 
-Video to upload: **`demo/hisabsetu-demo-60s.mp4`** — 61.2 s, 8.8 MB, 1920×1080,
-30 fps, H.264/AAC, Hindi voice-over + burned-in captions.
+Video to upload: **`demo/hisabsetu-demo-60s.mp4`** — 62.4 s, 7.3 MB, 1920×1080,
+30 fps, H.264/AAC, Hindi voice-over + burned-in Hinglish captions.
+
+English version, same picture and beats: **`demo/hisabsetu-demo-60s-en.mp4`** —
+60.1 s, 7.1 MB, English voice-over + English captions. Use it for an
+English-speaking audience (or as the second post / comment video); everything else
+in this file stays the same.
 
 Platform limits (checked Nov 2026): LinkedIn native video allows 3 s – 10 min and
 up to 5 GB (1080p is the recommended size); X allows 140 s and 512 MB on a free

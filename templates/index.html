@@ -71,44 +71,18 @@
     </section>
 
     <main>
-      <!-- ============ Money strip ============ -->
-      <section class="money-strip" aria-label="Ledger summary">
-        <article class="card money-card money-hero">
-          <div class="money-hero-top">
-            <span class="eyebrow" data-i18n="total_outstanding">Kul udhaar baaki</span><span class="u-visually-hidden">माली के लिए छिपा शब्द</span>
-            <span class="money-hero-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M4 8h13"/><path d="M16 13h1.5"/></svg>
+      <div class="views" id="views">
+
+        <!-- ==================== 1. BOLIYE ==================== -->
+        <section class="view is-active" id="view-bolo" data-view="bolo" aria-label="Bol kar likhein">
+          <button type="button" class="balance-chip" id="balance-chip" aria-label="Poora hisaab dekhein">
+            <span class="balance-chip-label" data-i18n="total_outstanding">Kul udhaar baaki</span>
+            <strong id="balance-chip-value">…</strong>
+            <span class="balance-chip-go" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
             </span>
-          </div>
-          <p class="money-value" id="total-outstanding" aria-live="polite">…</p>
-          <div class="money-hero-foot">
-            <span id="outstanding-customer-count">— customers</span>
-            <span class="money-hero-date" id="today-date">—</span>
-          </div>
-        </article>
+          </button>
 
-        <article class="card money-card">
-          <div class="metric-icon metric-credit" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-          </div>
-          <span class="eyebrow" data-i18n="today_credit">Aaj ka udhaar</span>
-          <p class="metric-value" id="today-credit">…</p>
-          <p class="metric-foot" id="today-credit-count" data-i18n="today_credit_foot">Aaj diya gaya credit</p>
-        </article>
-
-        <article class="card money-card">
-          <div class="metric-icon metric-payment" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
-          </div>
-          <span class="eyebrow" data-i18n="today_payment">Aaj ka jama</span>
-          <p class="metric-value" id="today-payment">…</p>
-          <p class="metric-foot" id="today-net">Net —</p>
-        </article>
-      </section>
-
-      <div class="layout">
-        <!-- ============ Left column ============ -->
-        <div class="stack">
           <!-- Voice -->
           <section class="card voice-card" id="voice-card">
             <div class="section-head">
@@ -214,8 +188,10 @@
 
           <!-- Result (proposal / clarification / answer / success) -->
           <section class="card result-card hidden" id="result-card" aria-live="polite" tabindex="-1"></section>
+        </section>
 
-          <!-- Customers -->
+        <!-- ==================== 2. GRAHAK ==================== -->
+        <section class="view view-narrow" id="view-grahak" data-view="grahak" aria-label="Grahak ka khata">
           <section class="card ledger-card">
             <div class="section-head compact">
               <div>
@@ -253,114 +229,151 @@
             </ul>
             <p class="empty-state hidden" id="customers-empty">Koi customer nahi mila. Naam badal kar dekhein.</p>
           </section>
-        </div>
+        </section>
 
-        <!-- ============ Right column ============ -->
-        <aside class="stack">
-          <!-- Daily summary -->
-          <section class="card daily-card" id="daily-card">
-            <div class="section-head compact">
-              <div>
-                <span class="eyebrow" data-i18n="aaj_ka_hisaab">Aaj ka hisaab</span>
-                <h2 id="daily-date" data-i18n="aaj">Aaj</h2>
+        <!-- ==================== 3. HISAAB ==================== -->
+        <section class="view" id="view-hisaab" data-view="hisaab" aria-label="Aaj ka hisaab">
+          <!-- Money strip -->
+          <section class="money-strip" aria-label="Ledger summary">
+            <article class="card money-card money-hero">
+              <div class="money-hero-top">
+                <span class="eyebrow" data-i18n="total_outstanding">Kul udhaar baaki</span>
+                <span class="money-hero-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M4 8h13"/><path d="M16 13h1.5"/></svg>
+                </span>
               </div>
-              <button type="button" class="icon-btn icon-btn-green" id="speak-summary" aria-label="Aaj ka hisaab sunao" title="Sunao">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 8a5 5 0 0 1 0 8"/></svg>
+              <p class="money-value" id="total-outstanding" aria-live="polite">…</p>
+              <div class="money-hero-foot">
+                <span id="outstanding-customer-count">— customers</span>
+                <span class="money-hero-date" id="today-date">—</span>
+              </div>
+            </article>
+
+            <article class="card money-card">
+              <div class="metric-icon metric-credit" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+              </div>
+              <span class="eyebrow" data-i18n="today_credit">Aaj ka udhaar</span>
+              <p class="metric-value" id="today-credit">…</p>
+              <p class="metric-foot" id="today-credit-count" data-i18n="today_credit_foot">Aaj diya gaya credit</p>
+            </article>
+
+            <article class="card money-card">
+              <div class="metric-icon metric-payment" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
+              </div>
+              <span class="eyebrow" data-i18n="today_payment">Aaj ka jama</span>
+              <p class="metric-value" id="today-payment">…</p>
+              <p class="metric-foot" id="today-net">Net —</p>
+            </article>
+          </section>
+
+          <div class="hisab-grid">
+            <!-- Daily summary -->
+            <section class="card daily-card" id="daily-card">
+              <div class="section-head compact">
+                <div>
+                  <span class="eyebrow" data-i18n="aaj_ka_hisaab">Aaj ka hisaab</span>
+                  <h2 id="daily-date" data-i18n="aaj">Aaj</h2>
+                </div>
+                <button type="button" class="icon-btn icon-btn-green" id="speak-summary" aria-label="Aaj ka hisaab sunao" title="Sunao">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 8a5 5 0 0 1 0 8"/></svg>
+                </button>
+              </div>
+
+              <div class="daily-grid">
+                <div class="daily-stat">
+                  <span data-i18n="udhaar_diya">Udhaar diya</span>
+                  <strong class="credit-text" id="daily-credit">…</strong>
+                </div>
+                <div class="daily-stat">
+                  <span data-i18n="jama_hua">Jama hua</span>
+                  <strong class="payment-text" id="daily-payment">…</strong>
+                </div>
+                <div class="daily-stat">
+                  <span data-i18n="net_badlav">Net badlav</span>
+                  <strong id="daily-net">…</strong>
+                </div>
+                <div class="daily-stat">
+                  <span data-i18n="kul_baaki">Kul baaki</span>
+                  <strong id="daily-outstanding">…</strong>
+                </div>
+              </div>
+
+              <div class="summary-note" id="daily-reply">Aaj ka hisaab load ho raha hai…</div>
+
+              <div class="divider"></div>
+
+              <div class="mini-head">
+                <h3 data-i18n="sabse_zyada">Sabse zyada udhaar</h3>
+                <button type="button" class="text-btn" id="ask-top-debtor" data-i18n="poochhein">Poochhein</button>
+              </div>
+              <ol class="top-list" id="top-debtors">
+                <li class="skeleton-row"></li><li class="skeleton-row"></li>
+              </ol>
+
+              <div class="reminder-box">
+                <div class="reminder-title" data-i18n="reminder_title">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+                  Yaad dilane ke liye
+                </div>
+                <ul id="daily-reminders"><li>—</li></ul>
+                <p class="fineprint" data-i18n="reminder_fineprint">Yeh sirf aapke liye sujhav hain. Kisi customer ko message nahi bheja jaata.</p>
+              </div>
+
+              <button type="button" class="btn btn-secondary btn-block" id="daily-voice">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v10"/><path d="M8 7v3a4 4 0 0 0 8 0V7"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/></svg>
+                <span data-i18n="hisaab_voice">Aaj ka hisaab voice mein poochhein</span>
               </button>
-            </div>
+            </section>
 
-            <div class="daily-grid">
-              <div class="daily-stat">
-                <span data-i18n="udhaar_diya">Udhaar diya</span>
-                <strong class="credit-text" id="daily-credit">…</strong>
+            <!-- Recent transactions -->
+            <section class="card">
+              <div class="section-head compact">
+                <div>
+                  <span class="eyebrow" data-i18n="txn_history">Transaction history</span>
+                  <h2 data-i18n="recent_entries">Recent entries</h2>
+                </div>
+                <span class="pill pill-count" id="txn-count">—</span>
               </div>
-              <div class="daily-stat">
-                <span data-i18n="jama_hua">Jama hua</span>
-                <strong class="payment-text" id="daily-payment">…</strong>
-              </div>
-              <div class="daily-stat">
-                <span data-i18n="net_badlav">Net badlav</span>
-                <strong id="daily-net">…</strong>
-              </div>
-              <div class="daily-stat">
-                <span data-i18n="kul_baaki">Kul baaki</span>
-                <strong id="daily-outstanding">…</strong>
-              </div>
-            </div>
-
-            <div class="summary-note" id="daily-reply">Aaj ka hisaab load ho raha hai…</div>
-
-            <div class="divider"></div>
-
-            <div class="mini-head">
-              <h3 data-i18n="sabse_zyada">Sabse zyada udhaar</h3>
-              <button type="button" class="text-btn" id="ask-top-debtor" data-i18n="poochhein">Poochhein</button>
-            </div>
-            <ol class="top-list" id="top-debtors">
-              <li class="skeleton-row"></li><li class="skeleton-row"></li>
-            </ol>
-
-            <div class="reminder-box">
-              <div class="reminder-title" data-i18n="reminder_title">
-                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
-                Yaad dilane ke liye
-              </div>
-              <ul id="daily-reminders"><li>—</li></ul>
-              <p class="fineprint" data-i18n="reminder_fineprint">Yeh sirf aapke liye sujhav hain. Kisi customer ko message nahi bheja jaata.</p>
-            </div>
-
-            <button type="button" class="btn btn-secondary btn-block" id="daily-voice">
-              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v10"/><path d="M8 7v3a4 4 0 0 0 8 0V7"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/></svg>
-              <span data-i18n="hisaab_voice">Aaj ka hisaab voice mein poochhein</span>
-            </button>
-          </section>
-
-          <!-- Recent transactions -->
-          <section class="card">
-            <div class="section-head compact">
-              <div>
-                <span class="eyebrow" data-i18n="txn_history">Transaction history</span>
-                <h2 data-i18n="recent_entries">Recent entries</h2>
-              </div>
-              <span class="pill pill-count" id="txn-count">—</span>
-            </div>
-            <ul class="txn-list" id="transactions-list">
-              <li class="skeleton-row"></li><li class="skeleton-row"></li><li class="skeleton-row"></li>
-            </ul>
-            <p class="empty-state hidden" id="transactions-empty">Abhi koi transaction nahi hai. Pehla udhaar bol kar likhein.</p>
-          </section>
+              <ul class="txn-list" id="transactions-list">
+                <li class="skeleton-row"></li><li class="skeleton-row"></li><li class="skeleton-row"></li>
+              </ul>
+              <p class="empty-state hidden" id="transactions-empty">Abhi koi transaction nahi hai. Pehla udhaar bol kar likhein.</p>
+            </section>
+          </div>
 
           <!-- System status — technical detail, collapsed for shopkeepers -->
           <details class="advanced-card">
             <summary data-i18n="setup">Setup</summary>
-          <section class="card status-card">
-            <div class="section-head compact">
-              <div>
-                <span class="eyebrow" data-i18n="setup">Setup</span>
-                <h2 data-i18n="voice_audio">Voice aur audio</h2>
+            <section class="card status-card">
+              <div class="section-head compact">
+                <div>
+                  <span class="eyebrow" data-i18n="setup">Setup</span>
+                  <h2 data-i18n="voice_audio">Voice aur audio</h2>
+                </div>
+                <button type="button" class="icon-btn" id="status-refresh" aria-label="Status refresh karein" title="Refresh status">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+                </button>
               </div>
-              <button type="button" class="icon-btn" id="status-refresh" aria-label="Status refresh karein" title="Refresh status">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
-              </button>
-            </div>
-            <ul class="status-list">
-              <li>
-                <span class="status-dot" id="gnani-dot"></span>
-                <div><strong>Gnani Prisma STT</strong><small id="stt-status">Check ho raha hai…</small></div>
-              </li>
-              <li>
-                <span class="status-dot" id="tts-dot"></span>
-                <div><strong>Gnani Timbre TTS</strong><small id="tts-status">Check ho raha hai…</small></div>
-              </li>
-              <li>
-                <span class="status-dot" id="ffmpeg-dot"></span>
-                <div><strong>FFmpeg audio conversion</strong><small id="ffmpeg-status">Check ho raha hai…</small></div>
-              </li>
-            </ul>
-            <p class="status-note" id="status-note">Text commands bina API key ke bhi kaam karte hain.</p>
-          </section>
+              <ul class="status-list">
+                <li>
+                  <span class="status-dot" id="gnani-dot"></span>
+                  <div><strong>Gnani Prisma STT</strong><small id="stt-status">Check ho raha hai…</small></div>
+                </li>
+                <li>
+                  <span class="status-dot" id="tts-dot"></span>
+                  <div><strong>Gnani Timbre TTS</strong><small id="tts-status">Check ho raha hai…</small></div>
+                </li>
+                <li>
+                  <span class="status-dot" id="ffmpeg-dot"></span>
+                  <div><strong>FFmpeg audio conversion</strong><small id="ffmpeg-status">Check ho raha hai…</small></div>
+                </li>
+              </ul>
+              <p class="status-note" id="status-note">Text commands bina API key ke bhi kaam karte hain.</p>
+            </section>
           </details>
-        </aside>
+        </section>
       </div>
 
       <footer class="footer"><p><strong>HisabSetu AI</strong> · <span data-i18n="footer_tag">Bolo. Likho. Hisaab Rakho.</span> · <span data-i18n="footer_note">Ledger hamesha transaction history se banta hai.</span></p>
@@ -368,6 +381,30 @@
       </footer>
     </main>
   </div>
+
+  <!-- ============ App-style section switcher ============ -->
+  <nav class="bottom-nav" id="bottom-nav" aria-label="App ke section">
+    <button type="button" class="nav-btn is-active" data-goto="bolo" aria-current="page">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="3" width="6" height="11" rx="3" />
+        <path d="M5.5 11a6.5 6.5 0 0 0 13 0" /><path d="M12 17.5V21" /><path d="M8.5 21h7" />
+      </svg>
+      <span data-i18n="nav_bolo">Bolo</span>
+    </button>
+    <button type="button" class="nav-btn" data-goto="grahak">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="8" r="3.2" /><path d="M3 20a6 6 0 0 1 12 0" />
+        <path d="M16.5 5.4a3.2 3.2 0 0 1 0 5.2" /><path d="M18 20a5.6 5.6 0 0 0-2-4.3" />
+      </svg>
+      <span data-i18n="nav_grahak">Grahak</span>
+    </button>
+    <button type="button" class="nav-btn" data-goto="hisaab">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h10" />
+      </svg>
+      <span data-i18n="nav_hisaab">Hisaab</span>
+    </button>
+  </nav>
 
   <div class="toast-wrap" id="toast-wrap" aria-live="assertive" aria-atomic="true"></div>
 

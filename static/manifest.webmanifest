@@ -36,8 +36,24 @@
   "shortcuts": [
     {
       "name": "Naya hisaab likhein",
-      "short_name": "Naya hisaab",
-      "url": "/#voice-card"
+      "short_name": "Bolo",
+      "description": "Bol kar udhaar ya jama likhein",
+      "url": "/?view=bolo",
+      "icons": [{ "src": "/static/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Grahak ka khata",
+      "short_name": "Grahak",
+      "description": "Customer ka balance dekhein",
+      "url": "/?view=grahak",
+      "icons": [{ "src": "/static/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Aaj ka hisaab",
+      "short_name": "Hisaab",
+      "description": "Din bhar ka udhaar, jama aur baaki",
+      "url": "/?view=hisaab",
+      "icons": [{ "src": "/static/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

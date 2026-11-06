@@ -48,3 +48,4 @@ python-3*.exe
 demo/raw/
 .tmp-demo/
 .tmp-rec/
+demo/raw-*/

@@ -8,7 +8,7 @@
  *    old CSS/JS.
  */
 
-const CACHE_VERSION = "hisabsetu-v3";
+const CACHE_VERSION = "hisabsetu-v5";
 const SHELL = [
   "/",
   "/static/styles.css",
@@ -16,6 +16,8 @@ const SHELL = [
   "/static/favicon.svg",
   "/static/icons/icon-192.png",
   "/static/icons/icon-512.png",
+  "/static/icons/maskable-512.png",
+  "/static/icons/apple-touch-icon.png",
 ];
 
 self.addEventListener("install", (event) => {

@@ -38,6 +38,8 @@ EXCLUDE_TOP_LEVEL_DIRS = {
 # Skipped as a path prefix, for bulky folders inside an otherwise shipped directory.
 EXCLUDE_NESTED_DIRS = {
     "demo/raw",              # extracted capture frames, regenerate with demo/capture.mjs
+    "demo/raw-en",
+    "demo/raw-hi",
     "demo/audio",            # narration wavs, regenerate with demo/tts_assets.py
 }
 EXCLUDE_FILES = {
@@ -81,6 +83,12 @@ def is_excluded(path: Path, rel: Path) -> bool:
         return True
     posix = rel.as_posix()
     if any(posix == prefix or posix.startswith(prefix + "/") for prefix in EXCLUDE_NESTED_DIRS):
+        return True
+    # Any future capture dump (demo/raw-*) is bulk by definition.
+    if posix.startswith("demo/raw-"):
+        return True
+    # Any scratch folder (.tmp-demo, .tmp-rec, .tmp-en …) is local-only.
+    if any(part.startswith(".tmp") for part in rel.parts):
         return True
     if parents and parents[0] in EXCLUDE_TOP_LEVEL_DIRS:
         return True

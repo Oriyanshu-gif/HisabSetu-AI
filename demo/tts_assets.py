@@ -27,6 +27,10 @@ from config import settings  # noqa: E402
 MODEL = os.environ.get("TTS_MODEL", settings.gnani_tts_model)
 VOICE = os.environ.get("TTS_VOICE", settings.gnani_tts_voice)
 SPEED = float(os.environ.get("TTS_SPEED", str(settings.gnani_tts_speed)) or 1.0)
+LANG = os.environ.get("TTS_LANG", settings.gnani_tts_language)
+# SCRIPT=en writes only the English voiceover (the microphone commands stay Hindi,
+# because the parser and the shopkeeper both speak Hindi).
+SCRIPT = os.environ.get("SCRIPT", "hi").strip().lower()
 OUT = ROOT / "demo" / "audio" / os.environ.get("VOICE_DIR_NAME", "voice")
 FFMPEG = ROOT / ".venv/Lib/site-packages/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe"
 
@@ -38,7 +42,7 @@ COMMANDS = {
 }
 
 # Narration: Hinglish script rendered in Devanagari so the Hindi voice reads it naturally.
-NARRATION = {
+NARRATION_HI = {
     "n1": "जय हिंद दोस्तों! पिछले कुछ हफ़्तों से मैं इस पर काम कर रहा हूँ — एक खाता, जो सिर्फ़ बोलने से चलता है।",
     "n2": "ये है हिसाबसेतु ए आई। मैं सिर्फ़ बोलूँगा।",
     "n3": "प्रिस्मा ने सुना, पार्सर ने डेढ़ सौ का उधार बना दिया — रमेश चार सौ पचास से छह सौ। और सबसे ज़रूरी बात: लेजर अभी नहीं बदला।",
@@ -49,11 +53,32 @@ NARRATION = {
     "n8": "बिना कन्फ़र्म कुछ नहीं बदलता। यही इस ऐप का पूरा आइडिया है।",
 }
 
+# English voiceover for the same 60-second cut (s5-correction is cut off at 60s,
+# so n7 is only used by the full-length version). Numbers are spelled out so the
+# TTS reads "rupees" instead of digits.
+NARRATION_EN = {
+    "n1": "Jai Hind, everyone! For the last few weeks I have been working on one thing — a khata that runs on voice alone.",
+    "n2": "This is HisabSetu AI. I will just speak.",
+    "n3": "Prisma heard it. The parser turned it into a credit of one hundred and fifty rupees — Ramesh moves from four fifty to six hundred. And the part that matters: the ledger has not changed yet.",
+    "n4": "I press Confirm. Now it is saved. Total four thousand seven hundred and fifty.",
+    "n5": "I asked for the balance. It answered, and Timbre read the reply out loud.",
+    "n6": "Two orders in one breath? It refuses, shows both, and asks me to do them one at a time.",
+    "n7": "If it hears me wrong, I fix the transcript — never the database.",
+    "n8": "Nothing changes without Confirm. That is the whole idea.",
+}
+
+NARRATION = NARRATION_EN if SCRIPT == "en" else NARRATION_HI
+CLIPS = NARRATION if SCRIPT == "en" else {**COMMANDS, **NARRATION}
+
 
 def synthesize(text: str) -> bytes:
     original = gnani_client.settings
     gnani_client.settings = replace(
-        original, gnani_tts_model=MODEL, gnani_tts_voice=VOICE, gnani_tts_speed=SPEED
+        original,
+        gnani_tts_model=MODEL,
+        gnani_tts_voice=VOICE,
+        gnani_tts_speed=SPEED,
+        gnani_tts_language=LANG,
     )
     try:
         return gnani_client.synthesize(text).audio
@@ -95,9 +120,9 @@ def fetch(name: str, text: str) -> Path:
 
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    print(f"model={MODEL} voice={VOICE} speed={SPEED} -> {OUT.relative_to(ROOT)}")
+    print(f"model={MODEL} voice={VOICE} lang={LANG} speed={SPEED} script={SCRIPT} -> {OUT.relative_to(ROOT)}")
     total = 0.0
-    for name, text in {**COMMANDS, **NARRATION}.items():
+    for name, text in CLIPS.items():
         total += duration(fetch(name, text))
     print(f"total audio: {total:.1f}s")
 

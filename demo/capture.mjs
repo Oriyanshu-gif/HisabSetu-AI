@@ -10,7 +10,10 @@ import { resolve } from "node:path";
 const ROOT = resolve(import.meta.dirname, "..");
 const EDGE = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
 const BASE = "http://127.0.0.1:8000/";
-const OUT = resolve(ROOT, "demo/raw");
+const OUT = resolve(ROOT, process.env.RAW_DIR || "demo/raw");
+// DEMO_LANG=en records English captions; the app itself stays in the Hinglish UI
+// because that is what a shopkeeper actually sees.
+const DEMO_LANG = (process.env.DEMO_LANG || "hing").toLowerCase();
 const AUDIO = process.env.AUDIO_DIR ? resolve(ROOT, process.env.AUDIO_DIR) : resolve(ROOT, "demo/audio/voice");
 const VIEWPORT = { width: 1440, height: 810 };
 const SCALE = 2;
@@ -78,8 +81,10 @@ function captionScript() {
     }
   `;
   document.head.appendChild(style);
+  // Toasts and the "install this app" bar are noise in a recording.
   const hide = document.createElement("style");
-  hide.textContent = '[class*="toast"], [id*="toast"] { display: none !important; }';
+  hide.textContent =
+    '[class*="toast"], [id*="toast"], #install-banner { display: none !important; }';
   document.head.appendChild(hide);
   const caption = document.createElement("div");
   caption.id = "demo-caption";
@@ -241,6 +246,8 @@ async function runSegment(segment, index) {
 
   await page.send("Page.navigate", { url: BASE });
   await sleep(3200);
+  // Pin the UI language so a stale localStorage value never changes the take.
+  await evaluate("typeof applyLanguage === 'function' ? applyLanguage('hing') : null");
   await evaluate(`(${captionScript.toString()})()`);
   await until(0.4);
 
@@ -289,14 +296,29 @@ const SCRIPT = {
   s6: "Bina Confirm kuch nahi badalta. Yahi is app ka poora idea hai.",
 };
 
+const SCRIPT_EN = {
+  s1: "Jai Hind! For the last few weeks I've been working on one thing — a khata that runs on voice alone.",
+  s2a: "This is HisabSetu AI. I'm only going to speak.",
+  s2b: "Prisma heard it, the parser made a ₹150 credit — Ramesh goes from ₹450 to ₹600. And the ledger has not changed yet.",
+  s2c: "I pressed Confirm — now it's saved. Total ₹4,750.",
+  s3: "I asked for the balance. It answered, and Timbre read the reply out loud.",
+  s4: "Two orders in one breath? It refuses, shows both, and asks for them separately.",
+  s5: "If it hears me wrong, I fix the transcript — never the database.",
+  s6: "Nothing changes without Confirm. That's the whole idea.",
+};
+
+const COPY = DEMO_LANG === "en" ? SCRIPT_EN : SCRIPT;
+
 const segments = [
   {
     name: "s1-dashboard",
     async run({ caption, until, evaluate, event }) {
-      await caption(SCRIPT.s1);
+      // The money cards live on the Hisaab screen in the three-section layout.
+      await evaluate("typeof setView === 'function' ? setView('hisaab', {scroll: false}) : null");
+      await caption(COPY.s1);
       event("caption_n1");
       await until(0.9);
-      await evaluate("window.__demoScroll(190, 0)");
+      await evaluate("window.__demoScroll(120, 0)");
       await until(7.6);
     },
   },
@@ -304,7 +326,8 @@ const segments = [
     name: "s2-voice-credit",
     wav: "cmd1",
     async run({ caption, until, evaluate, click, hover, waitText, event, now }) {
-      await caption(SCRIPT.s2a);
+      await evaluate("typeof setView === 'function' ? setView('bolo', {scroll: false}) : null");
+      await caption(COPY.s2a);
       event("caption_n2");
       await until(2.4);
       await hover("#mic-btn");
@@ -318,7 +341,7 @@ const segments = [
       if (!preview) throw new Error("preview never appeared");
       event("preview");
       await evaluate("window.__demoScrollToEl('#result-card', 80, 0)");
-      await caption(SCRIPT.s2b);
+      await caption(COPY.s2b);
       event("caption_n3");
       await until(now() + 8.6);
       await click('[data-action="confirm"]');
@@ -327,7 +350,7 @@ const segments = [
       event("success", { ok: Boolean(success) });
       await until(now() + 0.5);
       await evaluate("window.__demoScroll(0, 0)");
-      await caption(SCRIPT.s2c);
+      await caption(COPY.s2c);
       event("caption_n4");
       await until(now() + 4.2);
     },
@@ -348,7 +371,7 @@ const segments = [
       if (!answer) throw new Error("answer never appeared");
       event("answer");
       await evaluate("window.__demoScrollToEl('#result-card', 80, 0)");
-      await caption(SCRIPT.s3);
+      await caption(COPY.s3);
       event("caption_n5");
       await until(now() + 1.6);
       await click('[data-action="speak"]');
@@ -372,7 +395,7 @@ const segments = [
       if (!refusal) throw new Error("compound refusal never appeared");
       event("refusal");
       await evaluate("window.__demoScrollToEl('#result-card', 80, 0)");
-      await caption(SCRIPT.s4);
+      await caption(COPY.s4);
       event("caption_n6");
       await until(now() + 7.4);
     },
@@ -396,7 +419,7 @@ const segments = [
       const rebuilt = await waitText("250", 15);
       if (!rebuilt) throw new Error("rebuilt preview never appeared");
       event("rebuilt");
-      await caption(SCRIPT.s5);
+      await caption(COPY.s5);
       event("caption_n7");
       await until(now() + 4.5);
     },
@@ -407,9 +430,11 @@ const segments = [
       await until(0.6);
       await evaluate("window.__demoScroll(0, 0)");
       await until(1.9);
-      await caption(SCRIPT.s6);
+      await caption(COPY.s6);
       event("caption_n8");
       await until(now() + 1.2);
+      // Recent entries live on the Hisaab screen now.
+      await evaluate("typeof setView === 'function' ? setView('hisaab', {scroll: false}) : null");
       await evaluate("window.__demoScrollToEl('#transactions-list', 140, 0)");
       await until(now() + 4.0);
     },

@@ -108,6 +108,7 @@ const I18N = {
     install_later: "Baad mein",
     install_done: "App lag gaya — home screen par icon dekhein.",
     install_how: "Safari mein neeche Share dabaein → Add to Home Screen chunein.",
+    nav_bolo: "Bolo", nav_grahak: "Grahak", nav_hisaab: "Hisaab",
     footer_tag: "HisabSetu AI",
     footer_note: "Ledger hamesha transaction history se banta hai.",
     footer_fineprint: "Demo data kalpanik customers ka hai — koi asli phone, Aadhaar ya PAN number store nahi hota. Reminders sirf sujhav hain.",
@@ -139,6 +140,7 @@ const I18N = {
     install_later: "बाद में",
     install_done: "ऐप लग गया — होम स्क्रीन पर आइकन देखें।",
     install_how: "Safari में नीचे Share दबाएँ → Add to Home Screen चुनें।",
+    nav_bolo: "बोलिए", nav_grahak: "ग्राहक", nav_hisaab: "हिसाब",
     footer_tag: "हिसाबसेतु ए आई",
     footer_note: "खाता हमेशा लेन-देन के इतिहास से बनता है।",
     footer_fineprint: "डेमो डेटा काल्पनिक ग्राहकों का है — कोई असली फ़ोन, आधार या पैन नंबर स्टोर नहीं होता। रिमाइंडर सिर्फ़ सुझाव हैं।",
@@ -170,6 +172,7 @@ const I18N = {
     install_later: "Later",
     install_done: "Installed — look for the icon on your home screen.",
     install_how: "In Safari tap Share → Add to Home Screen.",
+    nav_bolo: "Speak", nav_grahak: "Customers", nav_hisaab: "Ledger",
     footer_tag: "HisabSetu AI",
     footer_note: "The ledger is always built from transaction history.",
     footer_fineprint: "Demo data uses fictional customers — no real phone, Aadhaar or PAN numbers are stored. Reminders are suggestions only.",
@@ -233,6 +236,60 @@ function initLanguage() {
   try { saved = localStorage.getItem(UI_LANG_KEY); } catch { /* storage blocked */ }
   // Hindi first: a first-time shopkeeper should not have to switch anything.
   applyLanguage(saved && I18N[saved] ? saved : "hi");
+}
+
+/* ------------------------------------------------------------------ */
+/* Sections: Bolo / Grahak / Hisaab                                   */
+/* One screen at a time — a first-time shopkeeper should never have to */
+/* scroll past things they did not ask for.                            */
+/* ------------------------------------------------------------------ */
+
+const VIEW_KEY = "vk-view";
+const VIEWS = ["bolo", "grahak", "hisaab"];
+
+function viewFromUrl() {
+  try {
+    const value = new URLSearchParams(window.location.search).get("view");
+    return VIEWS.includes(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function setView(name, options = {}) {
+  const view = VIEWS.includes(name) ? name : "bolo";
+  const scroll = options.scroll !== false;
+  document.querySelectorAll(".view[data-view]").forEach((section) => {
+    section.classList.toggle("is-active", section.dataset.view === view);
+  });
+  document.querySelectorAll("[data-goto]").forEach((button) => {
+    const isCurrent = button.dataset.goto === view;
+    button.classList.toggle("is-active", isCurrent);
+    if (isCurrent) button.setAttribute("aria-current", "page");
+    else button.removeAttribute("aria-current");
+  });
+  state.view = view;
+  if (options.remember !== false) {
+    try { localStorage.setItem(VIEW_KEY, view); } catch { /* storage blocked */ }
+  }
+  if (scroll) window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function initViews() {
+  let saved = null;
+  try { saved = localStorage.getItem(VIEW_KEY); } catch { /* storage blocked */ }
+  // A manifest shortcut (?view=hisaab) wins over the last screen used.
+  setView(viewFromUrl() || (VIEWS.includes(saved) ? saved : "bolo"), { scroll: false });
+
+  const nav = $("#bottom-nav");
+  if (nav) {
+    nav.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-goto]");
+      if (button) setView(button.dataset.goto);
+    });
+  }
+  const chip = $("#balance-chip");
+  if (chip) chip.addEventListener("click", () => setView("hisaab"));
 }
 
 const INTENT_LABELS = {
@@ -366,6 +423,7 @@ async function apiJson(path, options = {}) {
 
 function bindEvents() {
   $("#theme-toggle").addEventListener("click", toggleTheme);
+  initViews();
 
   $("#ui-lang").addEventListener("change", (event) => {
     const lang = event.target.value;
@@ -546,6 +604,8 @@ async function loadDashboard() {
   const data = await apiJson("/api/dashboard");
   state.dashboard = data;
   $("#total-outstanding").textContent = data.total_outstanding_text;
+  const chipValue = $("#balance-chip-value");
+  if (chipValue) chipValue.textContent = data.total_outstanding_text;
   $("#today-credit").textContent = data.today_credit_text;
   $("#today-payment").textContent = data.today_payment_text;
   $("#today-net").textContent = `Net ${data.today_net_text} · ${data.today_transaction_count} entries`;
@@ -700,6 +760,8 @@ function renderDaily(summary) {
 function showTranscript(text, source) {
   state.lastTranscript = text;
   state.lastSource = source;
+  // Every result lives on the talking screen, so any command jumps there.
+  setView("bolo", { scroll: false });
   $("#transcript-text").textContent = text;
   $("#transcript-card").classList.remove("hidden");
   $("#transcript-card").scrollIntoView({ behavior: "smooth", block: "nearest" });
