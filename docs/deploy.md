@@ -188,7 +188,7 @@ The image installs `ffmpeg` via apt, runs as a non-root user, and ships a
   → `database ok`, `ffmpeg_available true`, 8 seeded customers, DB file created in
   a folder that did not exist (the new `database._ensure_sqlite_directory` helper,
   covered by `tests/test_database.py`).
-- Full suite: **338 passed**.
+- Full suite: **341 passed**.
 - Live Gnani: one TTS and one STT request succeeded (documented in
   [fix-report.md](fix-report.md)).
 - **Not verified:** the Docker build and the Render/Fly deploys themselves —

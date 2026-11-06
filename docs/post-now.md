@@ -34,8 +34,8 @@ Built on Gnani’s voice models:
 • **Timbre** for the spoken replies (Deepak voice in the demo)
 
 What I deliberately did *not* build: a chatbot that guesses money.
-The parser is deterministic, so `sawa do sau` is ₹225 and not ₹200. Two
-instructions in one breath are refused and split instead of being half-executed.
+The parser is deterministic. Two instructions in one breath are refused and
+split instead of being half-executed.
 If a word is misheard, you fix the transcript or the amount before confirming —
 nothing is saved until Confirm, and a superseded preview can never be saved later.
 

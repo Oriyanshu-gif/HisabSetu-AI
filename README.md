@@ -6,7 +6,7 @@ A voice-first digital khata (ledger) for Indian kirana shopkeepers. Speak natura
 
 > Financial accuracy over flash: no unconfirmed write, no guessed amount, no silently created customer.
 
-![HisabSetu AI dashboard](screenshots/dashboard-desktop.png)
+![HisabSetu AI dashboard](docs/screenshots/1-dashboard.png)
 
 ---
 
@@ -32,7 +32,7 @@ The same flow works through the text fallback when a microphone or Gnani key is 
 - 💰 **Overpayment protection**: a payment larger than the outstanding balance requires a second acknowledgement before posting an advance.
 - 📊 **Live dashboard** (all figures from SQLite): total outstanding, today’s credit/payments/net, customer ledger with search, transaction history, daily summary, top debtors.
 - 🗣️ **Gnani Timbre replies** in natural Hindi with amounts pronounced as Hindi words. TTS failure never blocks the ledger.
-- 🧪 **338 automated tests** across parsing, ledger safety, API endpoints, mocked Gnani contracts, the 21-case STT/parser evaluation and real FFmpeg conversion.
+- 🧪 **341 automated tests** across parsing, ledger safety, API endpoints, mocked Gnani contracts, the 21-case STT/parser evaluation and real FFmpeg conversion.
 
 ---
 
@@ -234,7 +234,7 @@ python -m pytest
 
 - The suite uses a throwaway SQLite database, forces `GNANI_API_KEY` empty, and mocks all Gnani HTTP calls.
 - **No API key and no API charges are needed.**
-- Actual result in this workspace: **338 passed, 1 warning** (a Starlette/FastAPI deprecation notice about `httpx` in `TestClient`).
+- Actual result in this workspace: **341 passed, 1 warning** (a Starlette/FastAPI deprecation notice about `httpx` in `TestClient`).
 - The WebM conversion test **really encodes a WebM/Opus file with FFmpeg** and asserts the output is a 16 kHz mono PCM WAV.
 
 Focused runs:

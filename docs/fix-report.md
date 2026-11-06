@@ -8,7 +8,7 @@ files are in `.backup/`.
 
 | Check | Command | Result |
 |---|---|---|
-| Full suite | `python -m pytest` | **338 passed**, 1 warning (Starlette `httpx` deprecation) |
+| Full suite | `python -m pytest` | **341 passed**, 1 warning (Starlette `httpx` deprecation) |
 | Eval report | `python eval_report.py --markdown report.md --csv report.csv` | exit 0, report regenerated |
 | Startup | `python -m uvicorn main:app --host 127.0.0.1 --port 8000` | started, `/api/health` → 200 |
 | Python syntax | `python -m compileall …` | ok |

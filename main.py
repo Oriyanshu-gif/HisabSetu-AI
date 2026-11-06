@@ -1,4 +1,4 @@
-"""KhataVaani — FastAPI application.
+"""HisabSetu AI — FastAPI application.
 
 Run locally:  uvicorn main:app --reload
 Docs:         http://127.0.0.1:8000/docs
@@ -101,7 +101,7 @@ app.mount("/static", _NoCacheStaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/report.md", include_in_schema=False)
 def eval_markdown():
-    """Most recent KhataVaani STT + parser eval report.
+    """Most recent HisabSetu AI STT + parser eval report.
 
     Regenerate with ``python eval_report.py --markdown report.md`` from the
     project root, then reload this page.  The report is a static file served

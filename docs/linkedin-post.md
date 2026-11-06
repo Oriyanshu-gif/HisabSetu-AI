@@ -34,15 +34,15 @@ Built on Gnani’s voice models:
 • **Timbre** for the spoken confirmations
 
 What I deliberately did *not* build: a chatbot that guesses money.
-The parser is deterministic, so `sawa do sau` is ₹225 and not ₹200. Two
-instructions in one breath are refused and split instead of being half-executed.
+The parser is deterministic. Two instructions in one breath are refused and
+split instead of being half-executed.
 If the transcript is misheard, you can fix the words or the amount before
 confirming — nothing is saved until you press Confirm, and a superseded preview
 can never be saved later.
 
 Rule-based on purpose: financial accuracy over flash.
 
-338 automated tests, a 21-utterance Hindi/Hinglish evaluation suite, and a live
+341 automated tests, a 21-utterance Hindi/Hinglish evaluation suite, and a live
 Prisma → Timbre round trip verified today.
 
 60-second demo below 👇
@@ -122,7 +122,7 @@ Most kirana ledgers live in the shopkeeper’s head, in Hindi, out loud.
 I built **HisabSetu AI**: speak a command → see a ₹-exact preview → Confirm →
 the ledger changes (and the reply talks back in Hindi).
 
-Prisma STT + Timbre TTS, deterministic parser, 338 tests. 60s ⬇️
+Prisma STT + Timbre TTS, deterministic parser, 341 tests. 60s ⬇️
 
 @GnaniAI #GnaniAI #GreatIndianAIInternshipChallenge
 
@@ -139,7 +139,7 @@ Prisma STT + Timbre TTS, deterministic parser, 338 tests. 60s ⬇️
 - [ ] Links in the first comment, not in the post body (reach).
 - [ ] No API key, `.env`, terminal with secrets, or real customer name anywhere
       on screen.
-- [ ] Numbers you quote match the repo: **338 tests**, 21-case suite,
+- [ ] Numbers you quote match the repo: **341 tests**, 21-case suite,
       19/21 exact with 0 parser failures — do not inflate them or claim
       real-world accuracy that was not measured.
 - [ ] No claim of an award, offer, benchmark or user count.

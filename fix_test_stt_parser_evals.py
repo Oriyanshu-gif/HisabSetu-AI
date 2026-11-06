@@ -1,5 +1,5 @@
 """
-STT + Hinglish parser evaluation suite for KhataVaani.
+STT + Hinglish parser evaluation suite for HisabSetu AI.
 
 11 Prisma STT cases are shipped as fixed fixtures: each case preserves the
 original spoken phrase, the intended command, and the actual STT transcript

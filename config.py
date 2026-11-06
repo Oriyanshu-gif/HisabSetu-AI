@@ -1,4 +1,4 @@
-"""Runtime configuration for KhataVaani.
+"""Runtime configuration for HisabSetu AI.
 
 Everything is read from environment variables (or a local ``.env`` file).
 Secrets are never written to logs, API responses or the frontend.

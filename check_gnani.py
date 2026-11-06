@@ -25,7 +25,7 @@ DEFAULT_TTS_TEXT = "रमेश जी का एक सौ पचास रु
 
 
 def print_config() -> None:
-    print("KhataVaani — Gnani connectivity check")
+    print("HisabSetu AI — Gnani connectivity check")
     print(f"  base URL       : {settings.gnani_base_url}")
     print(f"  auth header    : {settings.gnani_auth_header}")
     print(f"  STT endpoint   : {settings.stt_url}")

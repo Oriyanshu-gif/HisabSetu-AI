@@ -1,4 +1,4 @@
-"""Deterministic Hindi / Hinglish command parser for KhataVaani.
+"""Deterministic Hindi / Hinglish command parser for HisabSetu AI.
 
 The parser is intentionally rule based and side-effect free:
 

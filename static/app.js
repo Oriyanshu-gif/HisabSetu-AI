@@ -1,4 +1,4 @@
-/* KhataVaani — frontend logic
+/* HisabSetu AI — frontend logic
    All money figures shown come from the SQLite ledger via the API.
    A transaction is only posted after an explicit confirm click. */
 

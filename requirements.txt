@@ -1,4 +1,4 @@
-# KhataVaani — Python 3.10+ (tested on 3.14 / Windows 11)
+# HisabSetu AI — Python 3.10+ (tested on 3.14 / Windows 11)
 fastapi>=0.115,<1.0
 uvicorn[standard]>=0.30,<1.0
 SQLAlchemy>=2.0,<3.0
