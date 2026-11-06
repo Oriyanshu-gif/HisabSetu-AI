@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b6b4f" />
+  <meta name="description" content="HisabSetu AI — Bolo. Likho. Hisaab Rakho. Hindi/Hinglish bol kar udhaar aur jama likhne wala digital khata." />
+  <title>HisabSetu AI — Bolo. Likho. Hisaab Rakho.</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="application-name" content="HisabSetu AI" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="HisabSetu" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#voice-card">Seedha mic par jayein</a>
+
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v10" /><path d="M8 7v3a4 4 0 0 0 8 0V7" />
+            <path d="M5 10a7 7 0 0 0 14 0" /><path d="M12 17v4" /><path d="M8 21h8" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 data-brand>HisabSetu AI</h1>
+          <p data-i18n="tagline">Bolo. Likho. Hisaab Rakho.</p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <span class="pill pill-soft" id="sample-badge" hidden>
+          <span class="dot"></span> Sample data
+        </span>
+        <div class="seg-select" id="lang-select">
+          <span class="seg-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v11H8l-4 4z"/></svg>
+          </span>
+          <label class="sr-only" for="ui-lang">Bhasha / Language</label>
+          <select id="ui-lang">
+            <option value="hi">हिन्दी</option>
+            <option value="hing" selected>Hinglish</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Dark mode" title="Dark / Light mode">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg>
+        </button>
+
+        <button class="icon-btn" id="refresh-all" type="button" aria-label="Data refresh karein" title="Refresh">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="install-banner hidden" id="install-banner" aria-live="polite">
+      <div class="install-copy">
+        <strong data-i18n="install_title">Phone par app jaisa laga lein</strong>
+        <span data-i18n="install_sub">Home screen par icon aa jaayega — roz kholna aasan.</span>
+      </div>
+      <button class="btn btn-primary" type="button" id="install-app" data-i18n="install_cta">App lagaayein</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="install-dismiss" data-i18n="install_later">Baad mein</button>
+    </section>
+
+    <main>
+      <!-- ============ Money strip ============ -->
+      <section class="money-strip" aria-label="Ledger summary">
+        <article class="card money-card money-hero">
+          <div class="money-hero-top">
+            <span class="eyebrow" data-i18n="total_outstanding">Kul udhaar baaki</span><span class="u-visually-hidden">माली के लिए छिपा शब्द</span>
+            <span class="money-hero-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M4 8h13"/><path d="M16 13h1.5"/></svg>
+            </span>
+          </div>
+          <p class="money-value" id="total-outstanding" aria-live="polite">…</p>
+          <div class="money-hero-foot">
+            <span id="outstanding-customer-count">— customers</span>
+            <span class="money-hero-date" id="today-date">—</span>
+          </div>
+        </article>
+
+        <article class="card money-card">
+          <div class="metric-icon metric-credit" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          </div>
+          <span class="eyebrow" data-i18n="today_credit">Aaj ka udhaar</span>
+          <p class="metric-value" id="today-credit">…</p>
+          <p class="metric-foot" id="today-credit-count" data-i18n="today_credit_foot">Aaj diya gaya credit</p>
+        </article>
+
+        <article class="card money-card">
+          <div class="metric-icon metric-payment" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg>
+          </div>
+          <span class="eyebrow" data-i18n="today_payment">Aaj ka jama</span>
+          <p class="metric-value" id="today-payment">…</p>
+          <p class="metric-foot" id="today-net">Net —</p>
+        </article>
+      </section>
+
+      <div class="layout">
+        <!-- ============ Left column ============ -->
+        <div class="stack">
+          <!-- Voice -->
+          <section class="card voice-card" id="voice-card">
+            <div class="section-head">
+              <div>
+                <span class="eyebrow" data-i18n="voice_khata">HisabSetu AI</span>
+                <h2 data-i18n="voice_title">Boliye, main likh dunga</h2>
+                <p class="section-sub" data-i18n="voice_sub">Sirf confirm karne ke baad hi hisaab badlega.</p>
+              </div>
+              <span class="pill pill-live" id="voice-status-pill">
+                <span class="dot"></span> Sunne ke liye taiyar
+              </span>
+            </div>
+
+            <div class="voice-stage">
+              <div class="mic-wrap">
+                <button class="mic-btn" id="mic-btn" type="button" aria-label="Recording shuru karein">
+                  <span class="mic-rings" aria-hidden="true"></span>
+                  <span class="mic-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="9" y="3" width="6" height="11" rx="3" />
+                      <path d="M5.5 11a6.5 6.5 0 0 0 13 0" />
+                      <path d="M12 17.5V21" /><path d="M8.5 21h7" />
+                    </svg>
+                  </span>
+                </button>
+                <div class="mic-caption">
+                  <strong id="mic-label">Dabaiye aur boliye</strong>
+                  <span id="mic-hint">Jaise: “Ramesh ko dedh sau ka udhaar likh do”</span>
+                </div>
+              </div>
+
+              <div class="wave-block">
+                <div class="wave" id="waveform" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="timer"><span id="timer">00:00</span><span class="timer-limit">/ 00:30</span></div>
+              </div>
+            </div>
+
+            <div class="voice-steps" aria-hidden="true">
+              <span><b>1</b> Bolein</span>
+              <span><b>2</b> Transcript dekhein</span>
+              <span><b>3</b> Confirm karein</span>
+            </div>
+
+            <form class="text-fallback" id="text-form" autocomplete="off">
+              <label class="sr-only" for="command-input">Hinglish ya Hindi mein likhein</label>
+              <div class="input-row">
+                <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16"/><path d="M4 12h10"/><path d="M4 19h7"/></svg>
+                <input id="command-input" name="text" type="text" maxlength="600" placeholder="Ya yahan likhein: Mohan ka kitna udhaar baaki hai?" />
+                <button class="btn btn-primary btn-send" type="submit" id="text-submit">
+                  Bhejein
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+                </button>
+              </div>
+              <div class="chips" id="example-chips" aria-label="Example commands">
+                <button type="button" class="chip" data-example="Ramesh ko dedh sau rupaye ka udhaar likh do">Ramesh ko ₹150 udhaar</button>
+                <button type="button" class="chip" data-example="Sunita ne do sau rupaye wapas kar diye">Sunita ne ₹200 diye</button>
+                <button type="button" class="chip" data-example="Mohan ka kitna udhaar baaki hai">Mohan ka balance</button>
+                <button type="button" class="chip" data-example="Aaj ka poora hisaab batao">Aaj ka hisaab</button>
+              </div>
+            </form>
+
+            <details class="help">
+              <summary>Mic kaam nahi kar raha?</summary>
+              <ul>
+                <li>Browser mein microphone permission <b>Allow</b> karein.</li>
+                <li>App ko <code>http://127.0.0.1:8000</code> par kholein (localhost par mic allowed hota hai).</li>
+                <li>Windows → Settings → Privacy → Microphone mein browser access on karein.</li>
+                <li>Nahi ho paye to upar text box se command likh sakte hain — sab kuch kaam karega.</li>
+              </ul>
+            </details>
+          </section>
+
+          <!-- Transcript -->
+          <section class="card transcript-card hidden" id="transcript-card" aria-live="polite">
+            <div class="section-head compact">
+              <div>
+                <span class="eyebrow">Aapne kaha</span>
+                <p class="transcript-text" id="transcript-text">—</p>
+              </div>
+              <span class="badge badge-confidence" id="transcript-confidence" hidden></span>
+            </div>
+            <div class="transcript-meta" id="transcript-meta"></div>
+            <div class="transcript-actions">
+              <button type="button" class="btn btn-ghost btn-sm" id="play-recording" hidden>
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>
+                Apni awaaz sunein
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm" id="retry-voice">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+                Phir se bolein
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm" id="edit-transcript" title="Transcript ko haath se theek karein">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+                Transcript sudharein
+              </button>
+            </div>
+            <audio id="recording-audio" class="hidden"></audio>
+          </section>
+
+          <!-- Result (proposal / clarification / answer / success) -->
+          <section class="card result-card hidden" id="result-card" aria-live="polite" tabindex="-1"></section>
+
+          <!-- Customers -->
+          <section class="card ledger-card">
+            <div class="section-head compact">
+              <div>
+                <span class="eyebrow" data-i18n="customer_khata">Customer khata</span>
+                <h2 data-i18n="sabke_hisaab">Sabke hisaab</h2>
+              </div>
+              <div class="ledger-tools">
+                <div class="search-box">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="11" cy="11" r="7"/><path d="m17 17 4 4"/></svg>
+                  <label class="sr-only" for="customer-search">Customer dhoondein</label>
+                  <input id="customer-search" type="search" placeholder="Naam dhoondein" data-i18n-ph="search_ph" autocomplete="off" />
+                </div>
+                <button type="button" class="icon-btn" id="add-customer-toggle" aria-label="Naya customer banayein" title="Naya customer">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <form class="add-customer-form hidden" id="add-customer-form" autocomplete="off">
+              <div class="add-customer-row">
+                <label class="sr-only" for="new-customer-name">Naya customer ka naam</label>
+                <input id="new-customer-name" name="name" type="text" maxlength="80" minlength="2" placeholder="Naya customer ka naam (jaise Kavita)" required />
+                <button type="submit" class="btn btn-primary btn-sm">Add karein</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="add-customer-cancel">Cancel</button>
+              </div>
+              <p class="fineprint">Naya customer sirf aapke add karne par banta hai. Naam mein number ya private ID na daalein.</p>
+            </form>
+
+            <div class="ledger-head" aria-hidden="true">
+              <span>Customer</span>
+              <span>Baaki / Advance</span>
+            </div>
+            <ul class="customer-list" id="customers-list">
+              <li class="skeleton-row"></li><li class="skeleton-row"></li><li class="skeleton-row"></li>
+            </ul>
+            <p class="empty-state hidden" id="customers-empty">Koi customer nahi mila. Naam badal kar dekhein.</p>
+          </section>
+        </div>
+
+        <!-- ============ Right column ============ -->
+        <aside class="stack">
+          <!-- Daily summary -->
+          <section class="card daily-card" id="daily-card">
+            <div class="section-head compact">
+              <div>
+                <span class="eyebrow" data-i18n="aaj_ka_hisaab">Aaj ka hisaab</span>
+                <h2 id="daily-date" data-i18n="aaj">Aaj</h2>
+              </div>
+              <button type="button" class="icon-btn icon-btn-green" id="speak-summary" aria-label="Aaj ka hisaab sunao" title="Sunao">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 8a5 5 0 0 1 0 8"/></svg>
+              </button>
+            </div>
+
+            <div class="daily-grid">
+              <div class="daily-stat">
+                <span data-i18n="udhaar_diya">Udhaar diya</span>
+                <strong class="credit-text" id="daily-credit">…</strong>
+              </div>
+              <div class="daily-stat">
+                <span data-i18n="jama_hua">Jama hua</span>
+                <strong class="payment-text" id="daily-payment">…</strong>
+              </div>
+              <div class="daily-stat">
+                <span data-i18n="net_badlav">Net badlav</span>
+                <strong id="daily-net">…</strong>
+              </div>
+              <div class="daily-stat">
+                <span data-i18n="kul_baaki">Kul baaki</span>
+                <strong id="daily-outstanding">…</strong>
+              </div>
+            </div>
+
+            <div class="summary-note" id="daily-reply">Aaj ka hisaab load ho raha hai…</div>
+
+            <div class="divider"></div>
+
+            <div class="mini-head">
+              <h3 data-i18n="sabse_zyada">Sabse zyada udhaar</h3>
+              <button type="button" class="text-btn" id="ask-top-debtor" data-i18n="poochhein">Poochhein</button>
+            </div>
+            <ol class="top-list" id="top-debtors">
+              <li class="skeleton-row"></li><li class="skeleton-row"></li>
+            </ol>
+
+            <div class="reminder-box">
+              <div class="reminder-title" data-i18n="reminder_title">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
+                Yaad dilane ke liye
+              </div>
+              <ul id="daily-reminders"><li>—</li></ul>
+              <p class="fineprint" data-i18n="reminder_fineprint">Yeh sirf aapke liye sujhav hain. Kisi customer ko message nahi bheja jaata.</p>
+            </div>
+
+            <button type="button" class="btn btn-secondary btn-block" id="daily-voice">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v10"/><path d="M8 7v3a4 4 0 0 0 8 0V7"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/></svg>
+              <span data-i18n="hisaab_voice">Aaj ka hisaab voice mein poochhein</span>
+            </button>
+          </section>
+
+          <!-- Recent transactions -->
+          <section class="card">
+            <div class="section-head compact">
+              <div>
+                <span class="eyebrow" data-i18n="txn_history">Transaction history</span>
+                <h2 data-i18n="recent_entries">Recent entries</h2>
+              </div>
+              <span class="pill pill-count" id="txn-count">—</span>
+            </div>
+            <ul class="txn-list" id="transactions-list">
+              <li class="skeleton-row"></li><li class="skeleton-row"></li><li class="skeleton-row"></li>
+            </ul>
+            <p class="empty-state hidden" id="transactions-empty">Abhi koi transaction nahi hai. Pehla udhaar bol kar likhein.</p>
+          </section>
+
+          <!-- System status — technical detail, collapsed for shopkeepers -->
+          <details class="advanced-card">
+            <summary data-i18n="setup">Setup</summary>
+          <section class="card status-card">
+            <div class="section-head compact">
+              <div>
+                <span class="eyebrow" data-i18n="setup">Setup</span>
+                <h2 data-i18n="voice_audio">Voice aur audio</h2>
+              </div>
+              <button type="button" class="icon-btn" id="status-refresh" aria-label="Status refresh karein" title="Refresh status">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+              </button>
+            </div>
+            <ul class="status-list">
+              <li>
+                <span class="status-dot" id="gnani-dot"></span>
+                <div><strong>Gnani Prisma STT</strong><small id="stt-status">Check ho raha hai…</small></div>
+              </li>
+              <li>
+                <span class="status-dot" id="tts-dot"></span>
+                <div><strong>Gnani Timbre TTS</strong><small id="tts-status">Check ho raha hai…</small></div>
+              </li>
+              <li>
+                <span class="status-dot" id="ffmpeg-dot"></span>
+                <div><strong>FFmpeg audio conversion</strong><small id="ffmpeg-status">Check ho raha hai…</small></div>
+              </li>
+            </ul>
+            <p class="status-note" id="status-note">Text commands bina API key ke bhi kaam karte hain.</p>
+          </section>
+          </details>
+        </aside>
+      </div>
+
+      <footer class="footer"><p><strong>HisabSetu AI</strong> · <span data-i18n="footer_tag">Bolo. Likho. Hisaab Rakho.</span> · <span data-i18n="footer_note">Ledger hamesha transaction history se banta hai.</span></p>
+        <p class="fineprint" data-i18n="footer_fineprint">HisabSetu AI demo data kalpanik customers ka hai — koi asli phone, Aadhaar ya PAN number store nahi hota. Reminders sirf sujhav hain.</p>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast-wrap" id="toast-wrap" aria-live="assertive" aria-atomic="true"></div>
+
+  <div class="busy-overlay hidden" id="busy-overlay" role="status" aria-live="polite">
+    <div class="busy-card">
+      <span class="spinner" aria-hidden="true"></span>
+      <p id="busy-text">Sun rahe hain…</p>
+      <small id="busy-sub">Gnani Prisma se transcript aa raha hai</small>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="noscript">HisabSetu AI chalane ke liye JavaScript on karein.</div>
+  </noscript>
+
+  <script src="/static/app.js" defer></script>
+  <script>
+    // PWA: installable app shell. The ledger itself is never cached (see sw.js).
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/sw.js").catch(function () {
+          /* offline shell is a bonus; the app still works without it */
+        });
+      });
+    }
+  </script>
+</body>
+</html>

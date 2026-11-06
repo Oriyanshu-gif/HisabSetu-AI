@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HisabSetu AI — Mic sweep</title>
+<style>
+  :root { --ink:#16231e; --muted:#68776f; --line:#e0ded4; --bg:#f6f4ed; --card:#fff;
+          --green:#0b6b4f; --green-soft:#eaf4ef; --red:#b42318; --amber:#b45309; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:24px; font:15px/1.5 system-ui, "Segoe UI", sans-serif;
+         background:var(--bg); color:var(--ink); }
+  h1 { font-size:20px; margin:0 0 4px; }
+  p.sub { margin:0 0 18px; color:var(--muted); font-size:13.5px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px;
+          padding:16px; margin-bottom:14px; }
+  .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  button { font:inherit; padding:9px 14px; border-radius:9px; border:1px solid var(--line);
+           background:#fff; cursor:pointer; }
+  button.primary { background:var(--green); color:#fff; border-color:var(--green); font-weight:600; }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  button.rec { background:var(--red); color:#fff; border-color:var(--red); font-weight:600; }
+  .phrase { font-weight:600; }
+  .num { display:inline-block; min-width:26px; color:var(--muted); font-weight:700; }
+  table { width:100%; border-collapse:collapse; font-size:13.5px; }
+  th, td { text-align:left; padding:8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+  .ok { color:var(--green); font-weight:600; }
+  .warn { color:var(--amber); font-weight:600; }
+  .pill { display:inline-block; padding:2px 9px; border-radius:999px; font-size:11.5px;
+          font-weight:700; border:1px solid var(--line); }
+  .pill.quiet { background:var(--green-soft); color:var(--green); border-color:#cfe6dd; }
+  .pill.noisy { background:#fdf0df; color:var(--amber); border-color:#f3ddc2; }
+  textarea { width:100%; min-height:150px; font:12.5px/1.5 ui-monospace, Consolas, monospace;
+             padding:10px; border-radius:9px; border:1px solid var(--line); }
+  .muted { color:var(--muted); font-size:12.5px; }
+  .err { color:var(--red); font-size:13px; }
+</style>
+</head>
+<body>
+<h1>Mic sweep — shaant vs shor</h1>
+<p class="sub">
+  Har phrase ko do baar bolein: pehle <b>Shaant</b> jagah, phir <b>Shor</b> mein. Har recording
+  <code>/api/stt</code> par jaati hai (sirf transcribe — koi transaction save nahi hota).
+  Aakhir mein "Copy table" dabayein aur mujhe paste kar dein.
+</p>
+
+<div class="card">
+  <div class="row">
+    <strong>Condition:</strong>
+    <label><input type="radio" name="cond" value="quiet" checked /> Shaant</label>
+    <label><input type="radio" name="cond" value="noisy" /> Shor</label>
+    <span class="muted" id="condHint"></span>
+  </div>
+</div>
+
+<div class="card">
+  <div id="phrases"></div>
+</div>
+
+<div class="card">
+  <div class="row" style="justify-content:space-between">
+    <strong>Results <span class="muted" id="count"></span></strong>
+    <span class="row">
+      <button id="copyBtn">Copy table</button>
+      <button id="downloadBtn">Download .md</button>
+      <button id="clearBtn">Clear all</button>
+    </span>
+  </div>
+  <div id="status" class="muted" style="margin:8px 0"></div>
+  <div style="overflow-x:auto">
+    <table id="resultTable">
+      <thead><tr><th>#</th><th>Condition</th><th>Phrase</th><th>Transcript</th><th>Verdict</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <strong>Copy-paste block</strong>
+  <p class="muted">Yeh text select karke seedha chat mein paste kar dein.</p>
+  <textarea id="out" readonly></textarea>
+</div>
+
+<script>
+const PHRASES = [
+  { text: "Ramesh ko dedh sau rupaye ka udhaar likh do", expect: "credit 150" },
+  { text: "Sunita ne do sau rupaye wapas kar diye", expect: "payment 200" },
+  { text: "Mohan ko sawa do sau ka udhaar likh do", expect: "credit 225" },
+  { text: "Ramesh bhai ko teen sau ka udhaar likh do", expect: "credit 300, name Ramesh" },
+  { text: "Suresh ko dedh hazaar rupaye ka udhaar likh do", expect: "credit 1500" },
+  { text: "Sunita ne paanch sau rupaye jama kiye", expect: "payment 500" },
+  { text: "Mohan ka kitna udhaar baaki hai", expect: "balance_query" },
+  { text: "Sabse zyada udhaar kis customer ka hai", expect: "top_debtor" },
+  { text: "Aaj ka poora hisaab batao", expect: "daily_summary" },
+  { text: "Ramesh ko pandrah sau rupaye ka udhaar likh do", expect: "credit 1500" }
+];
+
+const MAX_MS = 8000;
+const rows = [];            // {cond, phrase, expect, transcript}
+let recorder = null, chunks = [], timer = null, activeIndex = -1;
+
+const phrasesEl = document.getElementById('phrases');
+const tbody = document.querySelector('#resultTable tbody');
+const outEl = document.getElementById('out');
+const statusEl = document.getElementById('status');
+const countEl = document.getElementById('count');
+
+function currentCond() {
+  return document.querySelector('input[name=cond]:checked').value;
+}
+function condLabel(c) { return c === 'quiet' ? 'Shaant' : 'Shor'; }
+
+function renderPhrases() {
+  phrasesEl.innerHTML = PHRASES.map((p, i) => `
+    <div class="row" style="justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line)">
+      <div><span class="num">${i + 1}.</span><span class="phrase">${p.text}</span>
+        <div class="muted" style="margin-left:26px">expected: ${p.expect}</div></div>
+      <button data-i="${i}" class="recBtn">Record</button>
+    </div>`).join('');
+  phrasesEl.querySelectorAll('.recBtn').forEach(btn => {
+    btn.addEventListener('click', () => startRecording(Number(btn.dataset.i)));
+  });
+}
+
+async function startRecording(index) {
+  if (recorder && recorder.state === 'recording') return;
+  activeIndex = index;
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+      ? 'audio/webm;codecs=opus' : '';
+    recorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+    chunks = [];
+    recorder.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+    recorder.onstop = async () => {
+      stream.getTracks().forEach(t => t.stop());
+      clearTimeout(timer);
+      await upload(index, new Blob(chunks, { type: recorder.mimeType || 'audio/webm' }));
+    };
+    recorder.start();
+    const btn = phrasesEl.querySelector(`.recBtn[data-i="${index}"]`);
+    if (btn) { btn.classList.add('rec'); btn.textContent = 'Recording…'; }
+    statusEl.textContent = `Recording phrase ${index + 1}… bol dein (max ${MAX_MS / 1000}s)`;
+    timer = setTimeout(() => stopRecording(), MAX_MS);
+  } catch (err) {
+    statusEl.innerHTML = `<span class="err">Mic nahi mila: ${err.message}. Browser mein mic permission dein.</span>`;
+  }
+}
+
+function stopRecording() {
+  const btn = phrasesEl.querySelector(`.recBtn[data-i="${activeIndex}"]`);
+  if (btn) { btn.classList.remove('rec'); btn.textContent = 'Record'; }
+  if (recorder && recorder.state === 'recording') recorder.stop();
+}
+
+async function upload(index, blob) {
+  const cond = currentCond();
+  const phrase = PHRASES[index];
+  statusEl.textContent = 'Prisma se transcribe ho raha hai…';
+  const fd = new FormData();
+  fd.append('file', blob, 'mic.webm');
+  try {
+    const res = await fetch('/api/stt', { method: 'POST', body: fd });
+    const body = await res.json();
+    if (!res.ok) {
+      statusEl.innerHTML = `<span class="err">STT failed (HTTP ${res.status}): ${JSON.stringify(body).slice(0, 200)}</span>`;
+      return;
+    }
+    rows.push({ cond, phrase: phrase.text, expect: phrase.expect, transcript: body.transcript });
+    statusEl.textContent = `Saved ${condLabel(cond)} · "${body.transcript}"`;
+  } catch (err) {
+    statusEl.innerHTML = `<span class="err">Network error: ${err.message}</span>`;
+  }
+  render();
+}
+
+function render() {
+  tbody.innerHTML = rows.map((r, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td><span class="pill ${r.cond}">${condLabel(r.cond)}</span></td>
+      <td>${r.phrase}</td>
+      <td><b>${r.transcript || '—'}</b></td>
+      <td class="muted">${r.expect}</td>
+    </tr>`).join('');
+  countEl.textContent = `(${rows.length})`;
+  outEl.value = toMarkdown();
+}
+
+function toMarkdown() {
+  if (!rows.length) return '';
+  const lines = [
+    '| # | Condition | Phrase | Prisma transcript | Expected |',
+    '|---|-----------|--------|-------------------|----------|',
+    ...rows.map((r, i) =>
+      `| ${i + 1} | ${condLabel(r.cond)} | ${r.phrase} | ${r.transcript} | ${r.expect} |`)
+  ];
+  const quiet = rows.filter(r => r.cond === 'quiet').length;
+  const noisy = rows.filter(r => r.cond === 'noisy').length;
+  lines.push('', `Total: ${rows.length} (shaant ${quiet}, shor ${noisy})`);
+  return lines.join('\n');
+}
+
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(outEl.value);
+    statusEl.textContent = 'Table copy ho gaya.';
+  } catch {
+    outEl.select();
+    statusEl.textContent = 'Copy block select ho gaya — Ctrl+C dabayein.';
+  }
+});
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const blob = new Blob([outEl.value], { type: 'text/markdown' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'mic-sweep.md';
+  a.click();
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  rows.length = 0;
+  render();
+  statusEl.textContent = 'Cleared.';
+});
+document.querySelectorAll('input[name=cond]').forEach(el => {
+  el.addEventListener('change', () => {
+    document.getElementById('condHint').textContent =
+      currentCond() === 'quiet'
+        ? 'Shaant kamra: fan off, door band.'
+        : 'Shor: fan ya TV chalu karke thoda door khade ho kar bolein.';
+  });
+});
+
+renderPhrases();
+render();
+document.getElementById('condHint').textContent = 'Shaant kamra: fan off, door band.';
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "id": "/",
+  "name": "HisabSetu AI — Bolo. Likho. Hisaab Rakho.",
+  "short_name": "HisabSetu",
+  "description": "Hindi/Hinglish bol kar udhaar aur jama likhne wala digital khata. Gnani Prisma se transcript, Timbre se Hindi jawab.",
+  "lang": "hi",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#f6f4ed",
+  "theme_color": "#0b6b4f",
+  "categories": ["business", "finance", "productivity"],
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Naya hisaab likhein",
+      "short_name": "Naya hisaab",
+      "url": "/#voice-card"
+    }
+  ]
+}
