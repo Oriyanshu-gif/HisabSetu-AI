@@ -1,0 +1,18 @@
+# Keep the serverless bundle small and free of local state.
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.tmp-demo/
+.tmp-lang/
+demo/
+demo_run/
+docs/lang-eval-audio/
+docs/screenshots/
+*.mp4
+*.png
+*.zip
+.env
+.env.*
+!.env.example
