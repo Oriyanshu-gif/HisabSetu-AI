@@ -75,9 +75,9 @@ No end-to-end case failed for a parser reason on the supplied transcripts.
 
 ## Important limitation
 
-The 11 quiet cases and 10 noisy cases above are evaluated from *supplied transcripts*, not from recorded shop-floor audio.  The noisy-condition tier exercises filler-robust parsing (commands followed by unrelated shop talk), but the STT stage still judges the transcript the table gives it.  A true noisy-audio measurement would need recorded audio per condition.
+The 11 quiet cases and 10 noisy cases above are transcripts supplied by the author from their own recordings (one speaker, one device). The audio files are not in this repository, so this report scores the supplied transcripts. It is a small sample, not a general accuracy figure.
 
-These numbers are therefore **not** STT word-error or accuracy metrics:
+These numbers are **not** STT word-error rates or general accuracy metrics:
 
 - they measure our *parser* against fixed transcripts, and
 - the STT column is a per-case human judgement of that supplied transcript.

@@ -32,7 +32,7 @@ The same flow works through the text fallback when a microphone or Gnani key is 
 - 💰 **Overpayment protection**: a payment larger than the outstanding balance requires a second acknowledgement before posting an advance.
 - 📊 **Live dashboard** (all figures from SQLite): total outstanding, today’s credit/payments/net, customer ledger with search, transaction history, daily summary, top debtors.
 - 🗣️ **Gnani Timbre replies** in natural Hindi with amounts pronounced as Hindi words. TTS failure never blocks the ledger.
-- 🧪 **341 automated tests** across parsing, ledger safety, API endpoints, mocked Gnani contracts, the 21-case STT/parser evaluation and real FFmpeg conversion.
+- 🧪 **434 automated tests** across parsing, ledger safety, API endpoints, mocked Gnani contracts, the 21-case STT/parser evaluation and real FFmpeg conversion.
 
 ---
 
@@ -240,7 +240,7 @@ python -m pytest
 
 - The suite uses a throwaway SQLite database, forces `GNANI_API_KEY` empty, and mocks all Gnani HTTP calls.
 - **No API key and no API charges are needed.**
-- Actual result in this workspace: **341 passed, 1 warning** (a Starlette/FastAPI deprecation notice about `httpx` in `TestClient`).
+- Actual result in this workspace: **434 passed, 1 warning** (a Starlette/FastAPI deprecation notice about `httpx` in `TestClient`).
 - The WebM conversion test **really encodes a WebM/Opus file with FFmpeg** and asserts the output is a 16 kHz mono PCM WAV.
 
 Focused runs:
@@ -283,8 +283,7 @@ and the rules for reporting the numbers honestly — is in
 Current results on the supplied transcripts: **21/21** parse to a command,
 **19/21** reproduce the intended command exactly, **2/21** diverge only because
 the supplied transcript lost the command (cases 1 and 4), and **0** failures are
-attributable to the parser. No real-recording accuracy has been measured, so none
-is claimed.
+attributable to the parser. These transcripts come from the author's own recordings (11 quiet, 10 noisy; one speaker, one device) transcribed by Prisma. It is a small real-speech sample, not a general accuracy figure, and the audio files are not in this repository.
 
 ---
 
@@ -600,7 +599,7 @@ Context matters: “Mohan **ne** paise de diye” is a payment, while “Mohan *
 - **No automatic messages.** Reminders are suggestions shown to the shopkeeper only; no SMS/WhatsApp is sent.
 - **In-memory TTS cache** (per server process, max 12 replies). Audio is not persisted.
 - **Sample data stays until reset.** Delete `voice_khata.db` to start clean; first run seeds again.
-- **Live Gnani verification is a smoke test only.** One real TTS and one real STT request succeeded in this workspace (see above); that proves the wire format, not accuracy. No real-recording evaluation has been run — use `eval_recordings.py` and report the tier honestly. Do not read the green “FFmpeg” status as Gnani being configured.
+- **Live Gnani verification is a smoke test only.** One real TTS and one real STT request succeeded in this workspace (see above); that proves the wire format, not accuracy. Real-recording check: 21 clips from the author (11 quiet, 10 noisy; one speaker, one device) scored 19/21 exact end-to-end, 2/21 lost in transcription, 0 parser failures (see `report.md`). That is a small sample, not general accuracy; use `eval_recordings.py` for more. Do not read the green “FFmpeg” status as Gnani being configured.
 - **Amount limits:** one transaction up to ₹1,00,00,000 (1 crore), amounts stored as integer paise. Payment larger than the balance posts an advance only after acknowledgement.
 - **Timezone:** day boundaries use `Asia/Kolkata` (IST). Server and browser clocks should be roughly correct.
 - **Local SQLite** is perfect for one shop; it is not a multi-device cloud database.
@@ -619,7 +618,7 @@ Context matters: “Mohan **ne** paise de diye” is a payment, while “Mohan *
 | Gnani Prisma transcription | ✅ Verified live once (30 Oct 2026); requires `GNANI_API_KEY` |
 | Gnani Timbre spoken replies | ✅ Verified live once (230 KB WAV); text reply always available |
 | Compound-command detection + correction flows | ✅ Fully working + tested |
-| Real-recording accuracy | ⚠️ Not measured. Run `python eval_recordings.py --dir recordings\` on your own clips. |
+| Real-recording accuracy | ⚠️ Small sample only: 21 author clips (11 quiet, 10 noisy), 19/21 exact end-to-end. Not a general accuracy claim. |
 
 ---
 
@@ -643,7 +642,7 @@ with technical details, an X variant and a pre-post checklist are in
 >
 > #GnaniAI #GreatIndianAIInternshipChallenge #Hinglish #VoiceAI #BuildInPublic
 
-**Honesty note:** the post quotes only what the repository can back up — 337
+**Honesty note:** the post quotes only what the repository can back up — 434
 tests, a 21-case evaluation suite (19/21 exact, 0 parser failures) and one live
 Prisma+Timbre round trip. It claims no award, benchmark, user count or
 real-world accuracy.

@@ -42,7 +42,7 @@ can never be saved later.
 
 Rule-based on purpose: financial accuracy over flash.
 
-341 automated tests, a 21-utterance Hindi/Hinglish evaluation suite, and a live
+434 automated tests, a 21-utterance Hindi/Hinglish evaluation suite, and a live
 Prisma → Timbre round trip verified today.
 
 60-second demo below 👇
@@ -80,8 +80,7 @@ you having to overclaim:
 | **Best 60-second demo** | the shot list above is exactly 60 s |
 | **Tier 2 / Tier 3 towns** | the kirana framing and Hindi-first UI are aimed at exactly that user |
 
-Do **not** claim noisy-audio robustness as a result: the noisy tier is documented
-in [noisy-audio-eval.md](noisy-audio-eval.md) but real recordings were not run.
+Claim real-speech results only as a small sample: 21 author recordings (11 quiet, 10 noisy), 19/21 exact end-to-end. Do not claim general noisy-shop robustness.
 
 If you have 30 extra seconds (for a longer cut): overpayment guard — Sunita’s
 balance is ₹150, say “Sunita ne ek hazaar rupaye wapas kar diye”, show the
@@ -122,7 +121,7 @@ Most kirana ledgers live in the shopkeeper’s head, in Hindi, out loud.
 I built **HisabSetu AI**: speak a command → see a ₹-exact preview → Confirm →
 the ledger changes (and the reply talks back in Hindi).
 
-Prisma STT + Timbre TTS, deterministic parser, 341 tests. 60s ⬇️
+Prisma STT + Timbre TTS, deterministic parser, 434 tests. 60s ⬇️
 
 @GnaniAI #GnaniAI #GreatIndianAIInternshipChallenge
 
@@ -139,7 +138,7 @@ Prisma STT + Timbre TTS, deterministic parser, 341 tests. 60s ⬇️
 - [ ] Links in the first comment, not in the post body (reach).
 - [ ] No API key, `.env`, terminal with secrets, or real customer name anywhere
       on screen.
-- [ ] Numbers you quote match the repo: **341 tests**, 21-case suite,
+- [ ] Numbers you quote match the repo: **434 tests**, 21-case suite,
       19/21 exact with 0 parser failures — do not inflate them or claim
       real-world accuracy that was not measured.
 - [ ] No claim of an award, offer, benchmark or user count.

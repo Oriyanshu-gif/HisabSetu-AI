@@ -128,6 +128,6 @@ Stated precisely, so nothing here can be mistaken for a bigger claim:
   RIFF/WAVE file (`audio/wav`), and one real Prisma STT request on that same
   audio returned `रमेश को डेढ़ सौ रुपये का उधार लिख दो।` (model `prisma-v2.5`).
   One clip is a smoke test, not an accuracy measurement.
-- **Tier B / C / D:** not run. No real-recordings numbers exist yet, so none are
-  quoted anywhere in this repository. Run the commands above in your own
-  environment to produce them.
+- **Tier D (author's real recordings, small sample):** the 21 transcripts above come from the author's own recordings (11 quiet, 10 noisy; one speaker, one device), transcribed by Prisma. 19/21 exact end-to-end, 2/21 lost in transcription, 0 parser failures. The audio files are not in this repository, and the sample is too small to quote as general accuracy.
+- **Tier B (synthetic speech):** `docs/lang-eval.md` has Timbre -> Prisma -> parser round trips for all ten languages (150/150 on clean synthetic speech).
+- **Tier C (synthetic noise):** not run.

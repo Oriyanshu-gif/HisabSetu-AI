@@ -303,11 +303,9 @@ def summary(rows: list[dict], quiet: list[tuple] | None = None, noisy: list[tupl
     lines.append("## Important limitation")
     lines.append("")
     lines.append(
-        "The 11 quiet cases and 10 noisy cases above are evaluated from *supplied transcripts*, "
-        "not from recorded shop-floor audio.  The noisy-condition tier exercises filler-robust "
-        "parsing (commands followed by unrelated shop talk), but the STT stage still judges the "
-        "transcript the table gives it.  A true noisy-audio measurement would need recorded audio "
-        "per condition."
+        "The 11 quiet cases and 10 noisy cases above are transcripts supplied by the author from their own recordings "
+        "(one speaker, one device). The audio files are not in this repository, so this report scores the supplied "
+        "transcripts. It is a small sample, not a general accuracy figure."
     )
     lines.append("")
     lines.append("These numbers are therefore **not** STT word-error or accuracy metrics:")

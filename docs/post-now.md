@@ -41,7 +41,7 @@ nothing is saved until Confirm, and a superseded preview can never be saved late
 
 Rule-based on purpose: financial accuracy over flash.
 
-341 automated tests, a 21-utterance Hindi/Hinglish evaluation suite, and a live
+434 automated tests, a 21-utterance Hindi/Hinglish evaluation suite, and a live
 Prisma → Timbre round trip.
 
 One honest note: the voice in the demo is Gnani Timbre (synthetic), fed in through
@@ -107,7 +107,7 @@ X counts 280 characters. This is ~235:
 Kirana ledgers live in the shopkeeper's head — in Hindi, out loud.
 
 HisabSetu AI: speak → preview → Confirm → ledger changes.
-Prisma STT + Timbre TTS, deterministic parser, 341 tests.
+Prisma STT + Timbre TTS, deterministic parser, 434 tests.
 
 60s demo ⬇️ @GnaniAI
 #GnaniAI #GreatIndianAIInternshipChallenge
@@ -140,7 +140,7 @@ accuracy claimed.
 - [ ] `@Gnani` picked from the dropdown, not typed as plain text.
 - [ ] `#GnaniAI` and `#GreatIndianAIInternshipChallenge` present, spelled exactly.
 - [ ] Post visibility **public**.
-- [ ] Numbers match the repo: **341 tests**, 21-case suite, 19/21 exact, 0 parser
+- [ ] Numbers match the repo: **434 tests**, 21-case suite, 19/21 exact, 0 parser
       failures. No award, benchmark, user count or real-world accuracy claimed.
 - [ ] No API key, `.env`, terminal with secrets, or real customer name on screen —
       every seeded name is fictional.
